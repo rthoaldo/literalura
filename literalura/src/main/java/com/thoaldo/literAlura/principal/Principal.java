@@ -7,7 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.sql.*;
+import java.util.Properties;
 import java.util.Scanner;
+
+import static org.springframework.core.io.support.PropertiesLoaderUtils.loadProperties;
 
 @Component
 public class Principal implements CommandLineRunner {
@@ -19,9 +24,9 @@ public class Principal implements CommandLineRunner {
     private AutorService autorService;
 
     @Autowired
-    private IdiomaService idiomaService;
+    private static IdiomaService idiomaService;
 
-    private Scanner leitura = new Scanner(System.in);
+    private static Scanner leitura = new Scanner(System.in);
 
     public Principal(LivroService livroService, AutorService autorService, IdiomaService idiomaService) {
         this.livroService = livroService;
@@ -29,7 +34,7 @@ public class Principal implements CommandLineRunner {
         this.idiomaService = idiomaService;
     }
 
-    public void exibeMenu() {
+    public void exibeMenu() throws SQLException {
         var opcao = -1;
         while (opcao != 0) {
             var menu = """
@@ -99,13 +104,41 @@ public class Principal implements CommandLineRunner {
         }
     }
 
-    private void submenuListarLivrosPorIdioma() {
-        System.out.println("Digite o idioma desejado da lista abaixo");
-        idiomaService.findAll();
+    private void submenuListarLivrosPorIdioma() throws SQLException {
+        Scanner scanner = new Scanner(System.in); // Cria uma instância de Scanner local
 
-        String language = leitura.nextLine();
+        while (true) {
+            System.out.println("Selecione uma opção:");
+            System.out.println("1 - Espanhol (es)");
+            System.out.println("2 - Inglês (en)");
+            System.out.println("3 - Francês (fr)");
+            System.out.println("4 - Português (pt)");
+            System.out.println("0 - Voltar");
 
-        idiomaService.findByName(language);
+            int opcao = scanner.nextInt();
+            scanner.nextLine(); // Limpa o buffer de entrada
+
+            String idioma = "";
+            switch (opcao) {
+                case 1:
+                    idioma = "es";
+                    break;
+                case 2:
+                    idioma = "en";
+                    break;
+                case 3:
+                    idioma = "fr";
+                    break;
+                case 4:
+                    idioma = "pt";
+                    break;
+                case 0:
+                    return;
+                default:
+                    System.out.println("Opção inválida. Por favor, selecione uma opção válida.");
+                    continue;
+            }
+        }
     }
 
     @Override

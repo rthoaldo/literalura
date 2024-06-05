@@ -1,10 +1,12 @@
 package com.thoaldo.literAlura.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "idiomas")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Idioma {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,5 +47,12 @@ public class Idioma {
 
     public void setLivros(List<Livro> livros) {
         this.livros = livros;
+    }
+
+    @Override
+    public String toString() {
+        return "id=" + id +
+                ", name='" + name + '\'' +
+                ", livros=" + livros;
     }
 }

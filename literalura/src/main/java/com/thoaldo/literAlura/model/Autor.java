@@ -1,9 +1,13 @@
 package com.thoaldo.literAlura.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "autores")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Autor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,17 +15,21 @@ public class Autor {
 
     private String name;
 
-    private int birth_year;
+    @Column(name = "birth_year")
+    private int birthYear;
 
-    private int death_year;
+    @Column(name = "death_year")
+    private int deathYear;
 
-    // Construtores
-    public void Name() {}
+    @ManyToMany(mappedBy = "authors")
+    private List<Livro> livros;
 
-    public void Name(String name, int birth_year, int death_year) {
+    public Autor() {}
+
+    public Autor(String name, int birthYear, int deathYear) {
         this.name = name;
-        this.birth_year = birth_year;
-        this.death_year = death_year;
+        this.birthYear = birthYear;
+        this.deathYear = deathYear;
     }
 
     // Getters e Setters
@@ -42,28 +50,37 @@ public class Autor {
         this.name = name;
     }
 
-    public int getBirth_year() {
-        return birth_year;
+    public int getBirthYear() {
+        return birthYear;
     }
 
-    public void setBirth_year(int birth_year) {
-        this.birth_year = birth_year;
+    public void setBirthYear(int birthYear) {
+        this.birthYear = birthYear;
     }
 
-    public int getDeath_year() {
-        return death_year;
+    public int getDeathYear() {
+        return deathYear;
     }
 
-    public void setDeath_year(int death_year) {
-        this.death_year = death_year;
+    public void setDeathYear(int deathYear) {
+        this.deathYear = deathYear;
     }
 
-    // toString para facilitar a visualização dos dados
+    public List<Livro> getLivros() {
+        return livros;
+    }
+
+    public void setLivros(List<Livro> livros) {
+        this.livros = livros;
+    }
+
     @Override
     public String toString() {
-        return "id=" + id +
-               ", authors='" + name + '\'' +
-               ", birth_year=" + birth_year +
-               ", death_year=" + death_year;
+        return "Autor{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", birthYear=" + birthYear +
+                ", deathYear=" + deathYear +
+                '}';
     }
 }

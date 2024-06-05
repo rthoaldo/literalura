@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface LivroRepository extends JpaRepository<Livro, Long> {
     @JsonIgnoreProperties(ignoreUnknown = true)
+    boolean existsByTitle(String title);
     Optional<Livro> findById(Long id);
 }

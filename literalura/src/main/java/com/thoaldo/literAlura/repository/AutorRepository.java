@@ -4,11 +4,16 @@ import com.thoaldo.literAlura.model.Autor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface AutorRepository extends JpaRepository<Autor, Long> {
+    @Query("SELECT a FROM Autor a WHERE a.birthYear <= :year AND (a.deathYear IS NULL OR a.deathYear >= :year)")
+    List<Autor> findAutoresByYear(@Param("year") int year);
 
-    @Query("SELECT a FROM Autor a WHERE a.birth_year <= :year AND (a.death_year IS NULL OR a.death_year >= :year)")
-    Optional<Autor> findAuthorAliveInSpecifYear(@Param("year") Integer year);
+    Optional<Autor> findByNameAndBirthYearAndDeathYear(String name, int birthYear, int deathYear);
 }
+

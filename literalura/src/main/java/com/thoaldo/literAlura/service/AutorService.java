@@ -5,9 +5,7 @@ import com.thoaldo.literAlura.repository.AutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AutorService {
@@ -19,7 +17,6 @@ public class AutorService {
     }
 
     public List<Autor> listAuthorsAliveInSpecifYear(Integer ano) {
-        Optional<Autor> authorAlive = repository.findAuthorAliveInSpecifYear(ano);
-        return authorAlive.map(Collections::singletonList).orElseGet(Collections::emptyList);
+        return repository.findAutoresByYear(ano);
     }
 }

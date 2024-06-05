@@ -2,8 +2,8 @@ package com.thoaldo.literAlura.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "livros")
@@ -24,31 +24,16 @@ public class Livro {
             name = "livros_idiomas",
             joinColumns = @JoinColumn(name = "livros_id"),
             inverseJoinColumns = @JoinColumn(name = "idiomas_id"))
-    private List<Idioma> idiomas;  // Deve corresponder ao 'mappedBy' na classe Idioma
+    private List<Idioma> idiomas;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "livros_pessoas",
-            joinColumns = @JoinColumn(name = "livros"),
-            inverseJoinColumns = @JoinColumn(name = "autores"))
-    private List<Autor> name;
+            name = "livros_autores",
+            joinColumns = @JoinColumn(name = "livros_id"),
+            inverseJoinColumns = @JoinColumn(name = "autores_id"))
+    private List<Autor> authors;
 
-    private Integer download_count;
-
-    public Livro() {
-    }
-
-    public Livro(String title, List<Idioma> language, Integer download_count) {
-        this.title = title;
-        this.idiomas = language;
-        this.download_count = download_count;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Livro:\nTítulo: %s\nIdiomas: %s\nQtd Downloads: %d",
-                title, idiomas.stream().map(Idioma::getName).collect(Collectors.joining(", ")), download_count);
-    }
+    private Integer downloadCount;
 
     // Getters e Setters
 
@@ -76,11 +61,30 @@ public class Livro {
         this.idiomas = idiomas;
     }
 
-    public Integer getDownloadCount() {
-        return download_count;
+    public List<Autor> getAuthors() {
+        return authors;
     }
 
-    public void setDownloadCount(Integer download_count) {
-        this.download_count = download_count;
+    public void setAuthors(List<Autor> authors) {
+        this.authors = authors;
+    }
+
+    public Integer getDownloadCount() {
+        return downloadCount;
+    }
+
+    public void setDownloadCount(Integer downloadCount) {
+        this.downloadCount = downloadCount;
+    }
+
+    @Override
+    public String toString() {
+        return "Livro{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", idiomas=" + idiomas +
+                ", authors=" + authors +
+                ", downloadCount=" + downloadCount +
+                '}';
     }
 }
