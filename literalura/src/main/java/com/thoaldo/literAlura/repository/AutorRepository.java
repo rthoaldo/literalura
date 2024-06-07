@@ -16,4 +16,3 @@ public interface AutorRepository extends JpaRepository<Autor, Long> {
 
     Optional<Autor> findByNameAndBirthYearAndDeathYear(String name, int birthYear, int deathYear);
 }
-

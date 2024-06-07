@@ -3,6 +3,7 @@ package com.thoaldo.literAlura.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,23 +18,26 @@ public class Livro {
     private String title;
 
     @ElementCollection
-    private List<String> subjects;
+    private List<String> subjects = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "livros_idiomas",
             joinColumns = @JoinColumn(name = "livros_id"),
             inverseJoinColumns = @JoinColumn(name = "idiomas_id"))
-    private List<Idioma> idiomas;
+    private List<Idioma> idiomas = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "livros_autores",
             joinColumns = @JoinColumn(name = "livros_id"),
             inverseJoinColumns = @JoinColumn(name = "autores_id"))
-    private List<Autor> authors;
+    private List<Autor> authors = new ArrayList<>();
 
     private Integer downloadCount;
+
+    @ElementCollection
+    private List<String> languages = new ArrayList<>();
 
     // Getters e Setters
 
@@ -75,6 +79,14 @@ public class Livro {
 
     public void setDownloadCount(Integer downloadCount) {
         this.downloadCount = downloadCount;
+    }
+
+    public List<String> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(List<String> languages) {
+        this.languages = languages;
     }
 
     @Override

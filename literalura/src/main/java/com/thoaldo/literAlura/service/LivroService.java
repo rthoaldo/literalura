@@ -68,7 +68,7 @@ public class LivroService {
     public List<Livro> listBooks() {
         return livroRepository.findAll();
     }
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class ConsumoApiResponse {
         private int count;
         private List<Livro> results;
