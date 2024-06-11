@@ -1,7 +1,9 @@
 package com.thoaldo.literAlura.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +19,8 @@ public class Livro {
     @Column(unique = true)
     private String title;
 
-    @ElementCollection
-    private List<String> subjects = new ArrayList<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> subjects;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -34,10 +36,12 @@ public class Livro {
             inverseJoinColumns = @JoinColumn(name = "autores_id"))
     private List<Autor> authors = new ArrayList<>();
 
-    private Integer downloadCount;
-
-    @ElementCollection
+    @JsonProperty("languages")
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> languages = new ArrayList<>();
+
+    @JsonProperty("download_count")
+    private Integer downloadCount;
 
     // Getters e Setters
 
@@ -57,6 +61,14 @@ public class Livro {
         this.title = title;
     }
 
+    public List<String> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(List<String> subjects) {
+        this.subjects = subjects;
+    }
+
     public List<Idioma> getIdiomas() {
         return idiomas;
     }
@@ -73,14 +85,6 @@ public class Livro {
         this.authors = authors;
     }
 
-    public Integer getDownloadCount() {
-        return downloadCount;
-    }
-
-    public void setDownloadCount(Integer downloadCount) {
-        this.downloadCount = downloadCount;
-    }
-
     public List<String> getLanguages() {
         return languages;
     }
@@ -89,14 +93,21 @@ public class Livro {
         this.languages = languages;
     }
 
+    public Integer getDownloadCount() {
+        return downloadCount;
+    }
+
+    public void setDownloadCount(Integer downloadCount) {
+        this.downloadCount = downloadCount;
+    }
+
     @Override
     public String toString() {
-        return "Livro{" +
-                "id=" + id +
+        return "id=" + id +
                 ", title='" + title + '\'' +
                 ", idiomas=" + idiomas +
                 ", authors=" + authors +
-                ", downloadCount=" + downloadCount +
-                '}';
+                ", languages=" + languages +
+                ", downloadCount=" + downloadCount;
     }
 }

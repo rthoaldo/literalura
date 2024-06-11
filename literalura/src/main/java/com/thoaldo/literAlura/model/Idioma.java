@@ -15,7 +15,7 @@ public class Idioma {
     @Column(unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "idiomas")  // 'idiomas' deve corresponder ao nome da lista na classe Livro
+    @ManyToMany(mappedBy = "idiomas")
     private List<Livro> livros;
 
     public Idioma() {}

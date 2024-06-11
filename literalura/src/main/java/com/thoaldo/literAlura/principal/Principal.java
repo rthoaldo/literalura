@@ -44,7 +44,7 @@ public class Principal implements CommandLineRunner {
                     4 - Listar autores vivos em um determinado ano
                     5 - Listar livros em um determinado idioma
 
-                    9 - Sair
+                    0 - Sair
                     """;
 
             System.out.println(menu);
@@ -67,7 +67,7 @@ public class Principal implements CommandLineRunner {
                 case 5:
                     submenuListarLivrosPorIdioma();
                     break;
-                case 9:
+                case 0:
                     System.out.println("Saindo...");
                     System.exit(0);
                     break;

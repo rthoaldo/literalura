@@ -1,39 +1,32 @@
 package com.thoaldo.literAlura.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
 @Table(name = "autores")
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Autor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
+    @JsonProperty("birth_year")
     @Column(name = "birth_year")
-    private int birthYear;
+    private Integer birthYear;
 
+    @JsonProperty("death_year")
     @Column(name = "death_year")
-    private int deathYear;
+    private Integer deathYear;
 
-    @ManyToMany(mappedBy = "authors")
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Livro> livros;
 
-    public Autor() {}
-
-    public Autor(String name, int birthYear, int deathYear) {
-        this.name = name;
-        this.birthYear = birthYear;
-        this.deathYear = deathYear;
-    }
-
     // Getters e Setters
-
     public Long getId() {
         return id;
     }
@@ -50,19 +43,19 @@ public class Autor {
         this.name = name;
     }
 
-    public int getBirthYear() {
+    public Integer getBirthYear() {
         return birthYear;
     }
 
-    public void setBirthYear(int birthYear) {
+    public void setBirthYear(Integer birthYear) {
         this.birthYear = birthYear;
     }
 
-    public int getDeathYear() {
+    public Integer getDeathYear() {
         return deathYear;
     }
 
-    public void setDeathYear(int deathYear) {
+    public void setDeathYear(Integer deathYear) {
         this.deathYear = deathYear;
     }
 
@@ -76,12 +69,10 @@ public class Autor {
 
     @Override
     public String toString() {
-        return "Autor{" +
-                "id=" + id +
+        return "id=" + id +
                 ", name='" + name + '\'' +
                 ", birthYear=" + birthYear +
                 ", deathYear=" + deathYear +
-                '}';
+                ", livros=" + livros;
     }
 }
-

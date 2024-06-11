@@ -1,11 +1,11 @@
 package com.thoaldo.literAlura.service;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.thoaldo.literAlura.model.Autor;
 import com.thoaldo.literAlura.model.Idioma;
 import com.thoaldo.literAlura.model.Livro;
 import com.thoaldo.literAlura.repository.AutorRepository;
 import com.thoaldo.literAlura.repository.LivroRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +21,14 @@ public class LivroService {
     @Autowired
     private AutorRepository autorRepository;
 
+
     private final ConsumoApi consumoApi = new ConsumoApi();
     private final ConverterDados conversor = new ConverterDados();
     private final String ENDERECO = "http://gutendex.com/books/";
 
     public void saveLivro(String nomeLivro) {
         String searchUrl = ENDERECO + "?search=" + nomeLivro.replace(" ", "%20");
+        boolean livroSalvo = false;
 
         do {
             String json = consumoApi.obterDados(searchUrl);
@@ -34,8 +36,11 @@ public class LivroService {
 
             if (consumoApiResponse != null && consumoApiResponse.getResults() != null) {
                 for (Livro livro : consumoApiResponse.getResults()) {
+                    if (livroSalvo) {
+                        break;
+                    }
+
                     if (!livroRepository.existsByTitle(livro.getTitle())) {
-                        // Processar e salvar os autores do livro
                         List<Autor> autores = new ArrayList<>();
                         for (Autor autor : livro.getAuthors()) {
                             Autor autorExistente = autorRepository.findByNameAndBirthYearAndDeathYear(
@@ -46,28 +51,28 @@ public class LivroService {
                         autorRepository.saveAll(autores);
                         livro.setAuthors(autores);
 
-                        // Processar e salvar os idiomas do livro
                         List<Idioma> idiomas = new ArrayList<>();
                         for (Idioma idioma : livro.getIdiomas()) {
-                            Idioma idiomaName = new Idioma(idioma.getName());
-                            idiomas.add(idioma);
+                            Idioma idiomaExistente = new Idioma(idioma.getName());
+                            idiomas.add(idiomaExistente);
                         }
                         livro.setIdiomas(idiomas);
 
-                        // Salvar o livro no banco de dados
                         livroRepository.save(livro);
+                        livroSalvo = true;  // Marca que um livro foi salvo
                     }
                 }
                 searchUrl = consumoApiResponse.getNext();
             } else {
                 searchUrl = null;
             }
-        } while (searchUrl != null);
+        } while (searchUrl != null && !livroSalvo);  // Interrompe o loop se um livro foi salvo
     }
 
     public List<Livro> listBooks() {
         return livroRepository.findAll();
     }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class ConsumoApiResponse {
         private int count;
