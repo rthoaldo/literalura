@@ -1,5 +1,6 @@
 package com.thoaldo.literAlura.principal;
 
+import com.thoaldo.literAlura.model.Livro;
 import com.thoaldo.literAlura.service.LivroService;
 import com.thoaldo.literAlura.service.IdiomaService;
 import com.thoaldo.literAlura.service.AutorService;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -138,8 +140,24 @@ public class Principal implements CommandLineRunner {
                     System.out.println("Opção inválida. Por favor, selecione uma opção válida.");
                     continue;
             }
+
+            // Chamar o método de serviço para listar livros pelo idioma
+            List<Livro> livros = listarLivrosPorIdioma(idioma);
+            if (livros.isEmpty()) {
+                System.out.println("Nenhum livro encontrado para o idioma: " + idioma);
+            } else {
+                for (Livro livro : livros) {
+                    System.out.println(livro);
+                }
+            }
         }
     }
+
+    private List<Livro> listarLivrosPorIdioma(String idioma) {
+        // Chamar o método do serviço que faz a busca pelo idioma
+        return livroService.listBooksByLanguage(idioma);
+    }
+
 
     @Override
     public void run(String... args) throws Exception {

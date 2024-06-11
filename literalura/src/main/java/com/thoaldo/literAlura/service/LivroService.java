@@ -5,9 +5,11 @@ import com.thoaldo.literAlura.model.Idioma;
 import com.thoaldo.literAlura.model.Livro;
 import com.thoaldo.literAlura.repository.AutorRepository;
 import com.thoaldo.literAlura.repository.LivroRepository;
-
+import com.thoaldo.literAlura.service.ConsumoApi;
+import com.thoaldo.literAlura.service.ConverterDados;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,6 @@ public class LivroService {
 
     @Autowired
     private AutorRepository autorRepository;
-
 
     private final ConsumoApi consumoApi = new ConsumoApi();
     private final ConverterDados conversor = new ConverterDados();
@@ -58,6 +59,7 @@ public class LivroService {
                         }
                         livro.setIdiomas(idiomas);
 
+
                         livroRepository.save(livro);
                         livroSalvo = true;  // Marca que um livro foi salvo
                     }
@@ -71,6 +73,11 @@ public class LivroService {
 
     public List<Livro> listBooks() {
         return livroRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Livro> listBooksByLanguage(String language) {
+        return livroRepository.findByLanguagesContaining(language);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
